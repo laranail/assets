@@ -49,7 +49,7 @@
         "Simtabi\\Laranail\\Assets\\Providers\\AssetsServiceProvider"
       ],
       "aliases": {
-        "AssetsFacade": "Simtabi\\Laranail\\Assets\\Facades\\AssetsFacade"
+        "Assets": "Simtabi\\Laranail\\Assets\\Facades\\AssetsFacade"
       }
     }
   },
