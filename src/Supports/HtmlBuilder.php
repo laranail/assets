@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Assets\Supports;
 
@@ -7,11 +9,8 @@ use Illuminate\Support\HtmlString;
 
 class HtmlBuilder
 {
-
     /**
      * The URL generator instance.
-     *
-     * @var UrlGenerator
      */
     protected UrlGenerator $url;
 
@@ -25,14 +24,13 @@ class HtmlBuilder
      */
     public function script(string $url, array $attributes = [], ?bool $secure = null): HtmlString
     {
-        if (! $url)
-        {
-            return new HtmlString();
+        if (! $url) {
+            return new HtmlString;
         }
 
         $attributes['src'] = $this->url->asset($url, $secure);
 
-        return $this->toHtmlString('<script' . $this->attributes($attributes) . '></script>');
+        return $this->toHtmlString('<script'.$this->attributes($attributes).'></script>');
     }
 
     /**
@@ -40,20 +38,19 @@ class HtmlBuilder
      */
     public function style(string $url, array $attributes = [], ?bool $secure = null): HtmlString
     {
-        if (! $url)
-        {
-            return new HtmlString();
+        if (! $url) {
+            return new HtmlString;
         }
 
-        $attributes         = array_merge([
+        $attributes = array_merge([
             'media' => 'all',
-            'type'  => 'text/css',
-            'rel'   => 'stylesheet',
+            'type' => 'text/css',
+            'rel' => 'stylesheet',
         ], $attributes);
 
         $attributes['href'] = $this->url->asset($url, $secure);
 
-        return $this->toHtmlString('<link' . $this->attributes($attributes) . '>');
+        return $this->toHtmlString('<link'.$this->attributes($attributes).'>');
     }
 
     /**
@@ -63,19 +60,17 @@ class HtmlBuilder
     {
         $html = [];
 
-        foreach ($attributes as $key => $value)
-        {
+        foreach ($attributes as $key => $value) {
             $element = is_numeric($key) ? $key : $this->attributeElement($key, $value);
 
-            if (empty($element))
-            {
+            if (empty($element)) {
                 continue;
             }
 
             $html[] = $element;
         }
 
-        return count($html) > 0 ? ' ' . implode(' ', $html) : '';
+        return count($html) > 0 ? ' '.implode(' ', $html) : '';
     }
 
     /**
@@ -92,22 +87,18 @@ class HtmlBuilder
     protected function attributeElement(string $key, mixed $value)
     {
         // Treat boolean attributes as HTML properties
-        if (is_bool($value) && $key !== 'value')
-        {
+        if (is_bool($value) && $key !== 'value') {
             return $value ? $key : '';
         }
 
-        if (is_array($value) && $key === 'class')
-        {
-            return 'class="' . implode(' ', $value) . '"';
+        if (is_array($value) && $key === 'class') {
+            return 'class="'.implode(' ', $value).'"';
         }
 
-        if (! empty($value))
-        {
-            return $key . '="' . e($value, false) . '"';
+        if (! empty($value)) {
+            return $key.'="'.e($value, false).'"';
         }
 
         return $value;
     }
-
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Assets;
 
@@ -8,7 +10,6 @@ use Simtabi\Laranail\Assets\Supports\HtmlBuilder;
 
 class Assets
 {
-
     public const ASSETS_SCRIPT_POSITION_HEADER = 'header';
 
     public const ASSETS_SCRIPT_POSITION_FOOTER = 'footer';
@@ -32,21 +33,17 @@ class Assets
 
     public function __construct(Repository $config, HtmlBuilder $htmlBuilder)
     {
-        $this->config      = $config->get('assets');
+        $this->config = $config->get('assets');
 
-        $this->scripts     = $this->config['scripts'];
+        $this->scripts = $this->config['scripts'];
 
-        $this->styles      = $this->config['styles'];
+        $this->styles = $this->config['styles'];
 
         $this->htmlBuilder = $htmlBuilder;
     }
 
     /**
      * Add scripts to current module.
-     *
-     * @param array|string $assets
-     *
-     * @return Assets
      */
     public function addScripts(array|string $assets): self
     {
@@ -57,10 +54,6 @@ class Assets
 
     /**
      * Add Css to current module.
-     *
-     * @param array|string $assets
-     *
-     * @return Assets
      */
     public function addStyles(array|string $assets): self
     {
@@ -71,19 +64,13 @@ class Assets
 
     /**
      * Add styles directly.
-     *
-     * @param array|string $assets
-     *
-     * @return Assets
      */
     public function addStylesDirectly(array|string $assets): self
     {
-        foreach (Arr::wrap($assets) as &$item)
-        {
+        foreach (Arr::wrap($assets) as &$item) {
             $item = ltrim(trim($item), '/');
 
-            if (! in_array($item, $this->appendedStyles))
-            {
+            if (! in_array($item, $this->appendedStyles)) {
                 $this->appendedStyles[$item] = [
                     'src' => $item,
                     'attributes' => [],
@@ -96,23 +83,16 @@ class Assets
 
     /**
      * Add scripts directly.
-     *
-     * @param array|string $assets
-     * @param string       $location
-     *
-     * @return Assets
      */
     public function addScriptsDirectly(array|string $assets, string $location = self::ASSETS_SCRIPT_POSITION_FOOTER): self
     {
-        foreach (Arr::wrap($assets) as &$item)
-        {
+        foreach (Arr::wrap($assets) as &$item) {
             $item = ltrim(trim($item), '/');
 
-            if (! in_array($item, $this->appendedScripts[$location]))
-            {
+            if (! in_array($item, $this->appendedScripts[$location])) {
                 $this->appendedScripts[$location][$item] = [
                     'attributes' => [],
-                    'src'        => $item,
+                    'src' => $item,
                 ];
             }
         }
@@ -122,20 +102,14 @@ class Assets
 
     /**
      * Remove CSS from current module.
-     *
-     * @param array|string $assets
-     *
-     * @return Assets
      */
     public function removeStyles(array|string $assets): self
     {
-        if (empty($this->styles))
-        {
+        if (empty($this->styles)) {
             return $this;
         }
 
-        foreach (Arr::wrap($assets) as $rem)
-        {
+        foreach (Arr::wrap($assets) as $rem) {
             $index = array_search($rem, $this->styles);
             if ($index === false) {
                 continue;
@@ -149,24 +123,17 @@ class Assets
 
     /**
      * Remove scripts.
-     *
-     * @param array|string $assets
-     *
-     * @return Assets
      */
     public function removeScripts(array|string $assets): self
     {
-        if (empty($this->scripts))
-        {
+        if (empty($this->scripts)) {
             return $this;
         }
 
-        foreach (Arr::wrap($assets) as $rem)
-        {
+        foreach (Arr::wrap($assets) as $rem) {
             $index = array_search($rem, $this->scripts);
 
-            if ($index === false)
-            {
+            if ($index === false) {
                 continue;
             }
 
@@ -178,16 +145,10 @@ class Assets
 
     /**
      * Remove script/style items directly based on location (`header` or `footer`)
-     *
-     * @param array|string $assets
-     * @param string|null  $location
-     *
-     * @return Assets
      */
     public function removeItemDirectly(array|string $assets, ?string $location = null): self
     {
-        foreach (Arr::wrap($assets) as $item)
-        {
+        foreach (Arr::wrap($assets) as $item) {
             $item = ltrim(trim($item), '/');
 
             if ($location && in_array($location, [self::ASSETS_SCRIPT_POSITION_HEADER, self::ASSETS_SCRIPT_POSITION_FOOTER])) {
@@ -210,12 +171,10 @@ class Assets
 
         $this->scripts = array_unique($this->scripts);
 
-        foreach ($this->scripts as $script)
-        {
-            $configName = 'resources.scripts.' . $script;
+        foreach ($this->scripts as $script) {
+            $configName = 'resources.scripts.'.$script;
 
-            if (! empty($location) && $location !== Arr::get($this->config, $configName . '.location'))
-            {
+            if (! empty($location) && $location !== Arr::get($this->config, $configName.'.location')) {
                 continue; // Skip assets that don't match this location
             }
 
@@ -238,7 +197,7 @@ class Assets
         $this->styles = array_unique($this->styles);
 
         foreach ($this->styles as $style) {
-            $configName = 'resources.styles.' . $style;
+            $configName = 'resources.styles.'.$style;
 
             $styles = array_merge($styles, $this->getSource($configName));
         }
@@ -269,8 +228,7 @@ class Assets
     {
         $scripts = $this->getSource($configName, $location);
 
-        if (Arr::get($this->config, $configName . '.include_style'))
-        {
+        if (Arr::get($this->config, $configName.'.include_style')) {
             $this->addStyles([$script]);
         }
 
@@ -284,45 +242,35 @@ class Assets
     {
         $html = '';
 
-        if (! in_array($type, ['style', 'script']))
-        {
+        if (! in_array($type, ['style', 'script'])) {
             return $html;
         }
 
-        $configName = 'resources.' . $type . 's.' . $name;
+        $configName = 'resources.'.$type.'s.'.$name;
 
-        if (! Arr::has($this->config, $configName))
-        {
+        if (! Arr::has($this->config, $configName)) {
             return $html;
         }
 
         $src = $this->getSourceUrl($configName);
 
-        foreach ((array)$src as $item)
-        {
+        foreach ((array) $src as $item) {
             $html .= $this->htmlBuilder->{$type}($item, ['class' => 'hidden'])->toHtml();
         }
 
         return $html;
     }
 
-    /**
-     * @param string $configName
-     *
-     * @return string|array
-     */
     protected function getSourceUrl(string $configName): array|string
     {
-        if (! Arr::has($this->config, $configName))
-        {
+        if (! Arr::has($this->config, $configName)) {
             return '';
         }
 
-        $src = Arr::get($this->config, $configName . '.src.local');
+        $src = Arr::get($this->config, $configName.'.src.local');
 
-        if ($this->isUsingCdn($configName))
-        {
-            $src = Arr::get($this->config, $configName . '.src.cdn');
+        if ($this->isUsingCdn($configName)) {
+            $src = Arr::get($this->config, $configName.'.src.cdn');
         }
 
         return $src;
@@ -330,21 +278,20 @@ class Assets
 
     protected function isUsingCdn(string $configName): bool
     {
-        return Arr::get($this->config, $configName . '.use_cdn', false) && ! $this->config['offline'];
+        return Arr::get($this->config, $configName.'.use_cdn', false) && ! $this->config['offline'];
     }
 
     protected function getSource(string $configName, ?string $location = null): array
     {
         $isUsingCdn = $this->isUsingCdn($configName);
 
-        $attributes = $isUsingCdn ? [] : Arr::get($this->config, $configName . '.attributes', []);
+        $attributes = $isUsingCdn ? [] : Arr::get($this->config, $configName.'.attributes', []);
 
-        $src        = $this->getSourceUrl($configName);
+        $src = $this->getSourceUrl($configName);
 
-        $scripts    = [];
+        $scripts = [];
 
-        foreach ((array) $src as $s)
-        {
+        foreach ((array) $src as $s) {
             if (! $s) {
                 continue;
             }
@@ -355,12 +302,11 @@ class Assets
             ];
         }
 
-        if (empty($src) && $isUsingCdn && $location === self::ASSETS_SCRIPT_POSITION_HEADER && Arr::has($this->config, $configName . '.fallback'))
-        {
+        if (empty($src) && $isUsingCdn && $location === self::ASSETS_SCRIPT_POSITION_HEADER && Arr::has($this->config, $configName.'.fallback')) {
             $scripts[] = [
-                'fallbackURL' => Arr::get($this->config, $configName . '.src.local'),
-                'fallback'    => Arr::get($this->config, $configName . '.fallback'),
-                'src'         => $src,
+                'fallbackURL' => Arr::get($this->config, $configName.'.src.local'),
+                'fallback' => Arr::get($this->config, $configName.'.fallback'),
+                'src' => $src,
             ];
         }
 
@@ -369,7 +315,7 @@ class Assets
 
     public function getBuildVersion(): string
     {
-        return $this->build = $this->config['enable_version'] ? '?v=' . $this->config['version'] : '';
+        return $this->build = $this->config['enable_version'] ? '?v='.$this->config['version'] : '';
     }
 
     public function getHtmlBuilder(): HtmlBuilder
@@ -382,11 +328,11 @@ class Assets
      */
     public function renderHeader(array $lastStyles = []): string
     {
-        $styles      = $this->getStyles($lastStyles);
+        $styles = $this->getStyles($lastStyles);
 
         $headScripts = $this->getScripts(self::ASSETS_SCRIPT_POSITION_HEADER);
 
-        return view('assets::header', compact('styles', 'headScripts'))->render();
+        return view('laranail/assets::header', compact('styles', 'headScripts'))->render();
     }
 
     /**
@@ -396,7 +342,6 @@ class Assets
     {
         $bodyScripts = $this->getScripts(self::ASSETS_SCRIPT_POSITION_FOOTER);
 
-        return view('assets::footer', compact('bodyScripts'))->render();
+        return view('laranail/assets::footer', compact('bodyScripts'))->render();
     }
-
 }
