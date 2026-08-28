@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Assets;
 
-use Illuminate\Config\Repository;
 use Illuminate\Support\Arr;
+use Illuminate\Config\Repository;
 use Simtabi\Laranail\Assets\Supports\HtmlBuilder;
 
 class Assets
@@ -72,7 +72,7 @@ class Assets
 
             if (! in_array($item, $this->appendedStyles)) {
                 $this->appendedStyles[$item] = [
-                    'src' => $item,
+                    'src'        => $item,
                     'attributes' => [],
                 ];
             }
@@ -92,7 +92,7 @@ class Assets
             if (! in_array($item, $this->appendedScripts[$location])) {
                 $this->appendedScripts[$location][$item] = [
                     'attributes' => [],
-                    'src' => $item,
+                    'src'        => $item,
                 ];
             }
         }
@@ -172,9 +172,9 @@ class Assets
         $this->scripts = array_unique($this->scripts);
 
         foreach ($this->scripts as $script) {
-            $configName = 'resources.scripts.'.$script;
+            $configName = 'resources.scripts.' . $script;
 
-            if (! empty($location) && $location !== Arr::get($this->config, $configName.'.location')) {
+            if (! empty($location) && $location !== Arr::get($this->config, $configName . '.location')) {
                 continue; // Skip assets that don't match this location
             }
 
@@ -197,7 +197,7 @@ class Assets
         $this->styles = array_unique($this->styles);
 
         foreach ($this->styles as $style) {
-            $configName = 'resources.styles.'.$style;
+            $configName = 'resources.styles.' . $style;
 
             $styles = array_merge($styles, $this->getSource($configName));
         }
@@ -221,101 +221,9 @@ class Assets
         return $this->itemToHtml($name);
     }
 
-    /**
-     * Get script item.
-     */
-    protected function getScriptItem(string $location, string $configName, string $script): array
-    {
-        $scripts = $this->getSource($configName, $location);
-
-        if (Arr::get($this->config, $configName.'.include_style')) {
-            $this->addStyles([$script]);
-        }
-
-        return $scripts;
-    }
-
-    /**
-     * Convert item to html.
-     */
-    protected function itemToHtml(string $name, string $type = 'style'): string
-    {
-        $html = '';
-
-        if (! in_array($type, ['style', 'script'])) {
-            return $html;
-        }
-
-        $configName = 'resources.'.$type.'s.'.$name;
-
-        if (! Arr::has($this->config, $configName)) {
-            return $html;
-        }
-
-        $src = $this->getSourceUrl($configName);
-
-        foreach ((array) $src as $item) {
-            $html .= $this->htmlBuilder->{$type}($item, ['class' => 'hidden'])->toHtml();
-        }
-
-        return $html;
-    }
-
-    protected function getSourceUrl(string $configName): array|string
-    {
-        if (! Arr::has($this->config, $configName)) {
-            return '';
-        }
-
-        $src = Arr::get($this->config, $configName.'.src.local');
-
-        if ($this->isUsingCdn($configName)) {
-            $src = Arr::get($this->config, $configName.'.src.cdn');
-        }
-
-        return $src;
-    }
-
-    protected function isUsingCdn(string $configName): bool
-    {
-        return Arr::get($this->config, $configName.'.use_cdn', false) && ! $this->config['offline'];
-    }
-
-    protected function getSource(string $configName, ?string $location = null): array
-    {
-        $isUsingCdn = $this->isUsingCdn($configName);
-
-        $attributes = $isUsingCdn ? [] : Arr::get($this->config, $configName.'.attributes', []);
-
-        $src = $this->getSourceUrl($configName);
-
-        $scripts = [];
-
-        foreach ((array) $src as $s) {
-            if (! $s) {
-                continue;
-            }
-
-            $scripts[] = [
-                'src' => $s,
-                'attributes' => $attributes,
-            ];
-        }
-
-        if (empty($src) && $isUsingCdn && $location === self::ASSETS_SCRIPT_POSITION_HEADER && Arr::has($this->config, $configName.'.fallback')) {
-            $scripts[] = [
-                'fallbackURL' => Arr::get($this->config, $configName.'.src.local'),
-                'fallback' => Arr::get($this->config, $configName.'.fallback'),
-                'src' => $src,
-            ];
-        }
-
-        return $scripts;
-    }
-
     public function getBuildVersion(): string
     {
-        return $this->build = $this->config['enable_version'] ? '?v='.$this->config['version'] : '';
+        return $this->build = $this->config['enable_version'] ? '?v=' . $this->config['version'] : '';
     }
 
     public function getHtmlBuilder(): HtmlBuilder
@@ -343,5 +251,97 @@ class Assets
         $bodyScripts = $this->getScripts(self::ASSETS_SCRIPT_POSITION_FOOTER);
 
         return view('laranail/assets::footer', compact('bodyScripts'))->render();
+    }
+
+    /**
+     * Get script item.
+     */
+    protected function getScriptItem(string $location, string $configName, string $script): array
+    {
+        $scripts = $this->getSource($configName, $location);
+
+        if (Arr::get($this->config, $configName . '.include_style')) {
+            $this->addStyles([$script]);
+        }
+
+        return $scripts;
+    }
+
+    /**
+     * Convert item to html.
+     */
+    protected function itemToHtml(string $name, string $type = 'style'): string
+    {
+        $html = '';
+
+        if (! in_array($type, ['style', 'script'])) {
+            return $html;
+        }
+
+        $configName = 'resources.' . $type . 's.' . $name;
+
+        if (! Arr::has($this->config, $configName)) {
+            return $html;
+        }
+
+        $src = $this->getSourceUrl($configName);
+
+        foreach ((array) $src as $item) {
+            $html .= $this->htmlBuilder->{$type}($item, ['class' => 'hidden'])->toHtml();
+        }
+
+        return $html;
+    }
+
+    protected function getSourceUrl(string $configName): array|string
+    {
+        if (! Arr::has($this->config, $configName)) {
+            return '';
+        }
+
+        $src = Arr::get($this->config, $configName . '.src.local');
+
+        if ($this->isUsingCdn($configName)) {
+            $src = Arr::get($this->config, $configName . '.src.cdn');
+        }
+
+        return $src;
+    }
+
+    protected function isUsingCdn(string $configName): bool
+    {
+        return Arr::get($this->config, $configName . '.use_cdn', false) && ! $this->config['offline'];
+    }
+
+    protected function getSource(string $configName, ?string $location = null): array
+    {
+        $isUsingCdn = $this->isUsingCdn($configName);
+
+        $attributes = $isUsingCdn ? [] : Arr::get($this->config, $configName . '.attributes', []);
+
+        $src = $this->getSourceUrl($configName);
+
+        $scripts = [];
+
+        foreach ((array) $src as $s) {
+            if (! $s) {
+                continue;
+            }
+
+            $scripts[] = [
+                'src'        => $s,
+                'attributes' => $attributes,
+            ];
+        }
+
+        if (empty($src) && $isUsingCdn && $location === self::ASSETS_SCRIPT_POSITION_HEADER && Arr::has($this->config, $configName . '.fallback')) {
+            $scripts[] = [
+                'fallbackURL' => Arr::get($this->config, $configName . '.src.local'),
+                'fallback'    => Arr::get($this->config, $configName . '.fallback'),
+                'src'         => $src,
+            ];
+        }
+
+        return $scripts;
     }
 }

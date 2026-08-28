@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Assets\Supports;
 
-use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Support\HtmlString;
+use Illuminate\Contracts\Routing\UrlGenerator;
 
 class HtmlBuilder
 {
@@ -30,7 +30,7 @@ class HtmlBuilder
 
         $attributes['src'] = $this->url->asset($url, $secure);
 
-        return $this->toHtmlString('<script'.$this->attributes($attributes).'></script>');
+        return $this->toHtmlString('<script' . $this->attributes($attributes) . '></script>');
     }
 
     /**
@@ -44,13 +44,13 @@ class HtmlBuilder
 
         $attributes = array_merge([
             'media' => 'all',
-            'type' => 'text/css',
-            'rel' => 'stylesheet',
+            'type'  => 'text/css',
+            'rel'   => 'stylesheet',
         ], $attributes);
 
         $attributes['href'] = $this->url->asset($url, $secure);
 
-        return $this->toHtmlString('<link'.$this->attributes($attributes).'>');
+        return $this->toHtmlString('<link' . $this->attributes($attributes) . '>');
     }
 
     /**
@@ -70,7 +70,7 @@ class HtmlBuilder
             $html[] = $element;
         }
 
-        return count($html) > 0 ? ' '.implode(' ', $html) : '';
+        return count($html) > 0 ? ' ' . implode(' ', $html) : '';
     }
 
     /**
@@ -92,11 +92,11 @@ class HtmlBuilder
         }
 
         if (is_array($value) && $key === 'class') {
-            return 'class="'.implode(' ', $value).'"';
+            return 'class="' . implode(' ', $value) . '"';
         }
 
         if (! empty($value)) {
-            return $key.'="'.e($value, false).'"';
+            return $key . '="' . e($value, false) . '"';
         }
 
         return $value;
