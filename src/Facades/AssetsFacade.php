@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Assets\Facades;
 
-use Simtabi\Laranail\Assets\Assets;
 use Illuminate\Support\Facades\Facade;
+use Simtabi\Laranail\Assets\Assets;
 
 class AssetsFacade extends Facade
 {
