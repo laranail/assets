@@ -10,16 +10,16 @@ class AssetsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../../config/config.php', 'laranail.assets');
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'laranail/assets');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'laranail.assets');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'laranail/assets');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../../config/config.php' => config_path('assets.php'),
+                __DIR__ . '/../../config/config.php' => config_path('assets.php'),
             ], 'laranail::assets-config');
 
             $this->publishes([
-                __DIR__.'/../../resources/views' => resource_path('views/vendor/laranail/assets'),
+                __DIR__ . '/../../resources/views' => resource_path('views/vendor/laranail/assets'),
             ], 'laranail::assets-views');
         }
 
