@@ -1,9 +1,10 @@
 # laranail/assets
 
-[![Packagist](https://img.shields.io/packagist/v/laranail/assets.svg)](https://packagist.org/packages/laranail/assets)
 [![Tests](https://github.com/laranail/assets/actions/workflows/tests.yml/badge.svg)](https://github.com/laranail/assets/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/laranail/assets/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/laranail/assets/actions/workflows/static-analysis.yml)
 [![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+`laranail/assets` is not published to Packagist, so there is no registry-version badge to show — see [Install](#install).
 
 > An opinionated HTML asset manager for Laravel.
 
