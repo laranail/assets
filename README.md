@@ -16,6 +16,27 @@ Requires PHP `^8.4.1 || ^8.5` and Laravel `^13.0`.
 composer require laranail/assets
 ```
 
+## Quick start
+
+```blade
+{{-- resources/views/layouts/app.blade.php --}}
+<head>
+    {!! Assets::renderHeader() !!}
+</head>
+<body>
+    @yield('content')
+
+    {!! Assets::renderFooter() !!}
+</body>
+
+{{-- resources/views/checkout.blade.php --}}
+@extends('layouts.app')
+
+@php(Assets::addScriptsDirectly('js/checkout.js'))
+```
+
+The registered names and design are in [Architecture](docs/architecture.md); everything else is in the [documentation index](#documentation).
+
 ## <a name="documentation"></a>Documentation
 
 Full documentation is at
