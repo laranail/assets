@@ -33,7 +33,13 @@ class Assets
 
     public function __construct(Repository $config, HtmlBuilder $htmlBuilder)
     {
-        $this->config = $config->get('assets');
+        // The provider registers the defaults at `laranail.assets`. A config published before
+        // 2026-10 landed at the bare `config/assets.php` and is still honoured, so an application
+        // that already overrode it keeps its override (deprecated: republish with
+        // `--tag=laranail::assets-config`, which now writes config/laranail/assets.php).
+        $this->config = $config->has('assets.scripts')
+            ? $config->get('assets')
+            : $config->get('laranail.assets');
 
         $this->scripts = $this->config['scripts'];
 
@@ -57,7 +63,7 @@ class Assets
      */
     public function addStyles(array|string $assets): self
     {
-        $this->scripts = array_merge($this->scripts, Arr::wrap($assets));
+        $this->styles = array_merge($this->styles, Arr::wrap($assets));
 
         return $this;
     }
