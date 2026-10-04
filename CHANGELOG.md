@@ -5,8 +5,7 @@ All notable changes to `laranail/assets` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## [Unreleased]
 ### Fixed
 
 - **`Assets` resolves on a fresh install.** It read its config from the bare `assets` key while
@@ -43,3 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A test suite and CI, neither of which this package had.
 - `LICENSE` (MIT), and a `docs/` tree.
+
+[Unreleased]: https://github.com/laranail/assets/compare/v0.1.0...HEAD
