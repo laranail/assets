@@ -26,6 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A `Quick start` section in the README.
 
+### Changed
+
+- The `repositories` block replaces Packagist with a copy that excludes `laranail/*`, so
+  `laranail/package-tools` can only resolve from its VCS repository and never from a stale
+  Packagist copy of the same name. This is the family's standard block.
+- The Imani Manyara author entry carries `imani@simtabi.com`.
+
 ## v0.1.0
 
 ### Changed
