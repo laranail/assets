@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- A guard now keeps literal credentials out of the tests, and every credential generated with
+  `TestCredentials` named with a single word, so secret scanning has nothing to report.
+  `laranail/package-tools` is raised to `^0.1.10`, which ships the purpose check.
+
 - The `repositories` block replaces Packagist with a copy that excludes `laranail/*`, so
   `laranail/package-tools` can only resolve from its VCS repository and never from a stale
   Packagist copy of the same name. This is the family's standard block.
